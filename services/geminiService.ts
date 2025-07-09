@@ -40,10 +40,10 @@ export const generateBattleTopic = async (): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: "Tạo một chủ đề thi đấu dưới dạng một đoạn văn mô tả một tình huống hoặc một câu đố mẹo. Đoạn văn phải hoàn chỉnh và đầy đủ chi tiết để người chơi có thể dựa vào đó viết một prompt để giải quyết vấn đề. Ví dụ: 'Bạn là một nhà khảo cổ học vừa khám phá ra một căn hầm cổ bị niêm phong. Bên trong, có ba cánh cửa. Một bản khắc trên tường ghi: \"Một cánh cửa dẫn đến kho báu, một dẫn đến cạm bẫy chết người, và một dẫn ra ngoài an toàn. Mỗi cánh cửa được canh giữ bởi một pho tượng biết nói. Tượng canh cửa an toàn luôn nói thật, tượng canh cửa kho báu luôn nói dối, và tượng canh cửa cạm bẫy lúc nói thật lúc nói dối. Bạn chỉ được hỏi một câu hỏi duy nhất cho một trong ba pho tượng.\" Hãy tạo ra những tình huống tương tự.' Chỉ trả về đoạn văn mô tả tình huống.",
+            contents: "Tạo một chủ đề thi đấu dưới dạng một đoạn văn mô tả một tình huống hoặc một câu đố mẹo. Đoạn văn phải hoàn chỉnh và đầy đủ chi tiết để người chơi có thể dựa vào đó viết một prompt để giải quyết vấn đề. Ví dụ: 'Có một người bị ngã xuống vực! Ai cứu người đó đi!' Hãy tạo ra những tình huống tương tự. Chỉ trả về đoạn văn mô tả tình huống.",
             config: {
                 temperature: 1.0,
-                maxOutputTokens: 500,
+                maxOutputTokens: 150,
                 thinkingConfig: { thinkingBudget: 0 }
             }
         });
