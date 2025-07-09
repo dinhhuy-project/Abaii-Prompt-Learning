@@ -23,9 +23,9 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: your-app-name    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '20.x'                # set this to the node version to use
+  AZURE_WEBAPP_NAME: Abaii_Prompt_Learning    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'              # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '20.x'                        # set this to the node version to use
 
 permissions:
   contents: read
@@ -64,6 +64,9 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+    - name: Azure Login
+      uses: Azure/login@v2.3.0
+
     - name: Download artifact from build job
       uses: actions/download-artifact@v4
       with:
