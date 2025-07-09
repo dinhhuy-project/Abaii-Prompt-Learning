@@ -1,0 +1,6 @@
+{
+  "name": "Abaii Prompt Learning",
+  "description": "An application for users to create topics, write prompts, and use AI to optimize or review them. Includes features for generating random topics, taking mini-quizzes, and competing in prompt battles.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
