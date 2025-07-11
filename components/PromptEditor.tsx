@@ -1,3 +1,4 @@
+
 import React from 'react';
 import type { Topic } from '../types.ts';
 import { WandIcon, CheckBadgeIcon, LightBulbIcon } from './icons.tsx';
@@ -21,12 +22,12 @@ const ResultCard: React.FC<{ title: string; content: string; icon: React.ReactNo
     if (!isLoading && !content) return null;
 
     return (
-        <div className="bg-gray-800 rounded-lg p-4 mt-4 relative">
-            <h3 className="text-lg font-semibold text-cyan-400 mb-2 flex items-center gap-2">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mt-4 relative">
+            <h3 className="text-lg font-semibold text-cyan-400 mb-3 flex items-center gap-2">
                 {icon}
                 {title}
             </h3>
-            <div className="bg-gray-900 rounded p-3 min-h-[100px] text-gray-300 whitespace-pre-wrap font-mono text-sm leading-relaxed">
+            <div className="bg-black/50 rounded p-3 min-h-[100px] text-gray-300 whitespace-pre-wrap font-mono text-sm leading-relaxed">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <Spinner />
@@ -43,12 +44,12 @@ const SuggestionsCard: React.FC<{ title: string; prompts: string[]; onSelect: (p
     if (!isLoading && prompts.length === 0) return null;
 
     return (
-        <div className="bg-gray-800 rounded-lg p-4 mt-4 relative">
-            <h3 className="text-lg font-semibold text-purple-400 mb-2 flex items-center gap-2">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 mt-4 relative">
+            <h3 className="text-lg font-semibold text-cyan-400 mb-3 flex items-center gap-2">
                 <LightBulbIcon className="h-6 w-6" />
                 {title}
             </h3>
-            <div className="bg-gray-900 rounded p-3 min-h-[100px] text-gray-300">
+            <div className="bg-black/50 rounded p-3 min-h-[100px] text-gray-300">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
                         <Spinner />
@@ -59,7 +60,7 @@ const SuggestionsCard: React.FC<{ title: string; prompts: string[]; onSelect: (p
                             <li key={index}>
                                 <button
                                     onClick={() => onSelect(p)}
-                                    className="w-full text-left p-3 bg-gray-700 hover:bg-gray-600 rounded-md transition duration-200"
+                                    className="w-full text-left p-3 bg-gray-800 hover:bg-gray-700/70 border border-gray-700 rounded-md transition duration-200"
                                     aria-label={`Sử dụng gợi ý: ${p}`}
                                 >
                                     <p className="font-mono text-sm leading-relaxed whitespace-pre-wrap">{p}</p>
@@ -89,14 +90,14 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
 }) => {
   const isLoading = loadingAction !== null;
   return (
-    <div className="flex-1 flex flex-col p-6 bg-gray-800/50 rounded-lg shadow-inner overflow-y-auto">
+    <div className="flex-1 flex flex-col p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">
-        Chủ đề: <span className="text-cyan-400">{topic.name}</span>
+        Chủ đề: <span className="text-cyan-400 font-semibold">{topic.name}</span>
       </h2>
 
       <div className="flex flex-col gap-4">
         <div>
-          <label htmlFor="prompt-input" className="block text-sm font-medium text-gray-300 mb-2">
+          <label htmlFor="prompt-input" className="block text-sm font-medium text-gray-400 mb-2">
             Prompt của bạn
           </label>
           <textarea
@@ -104,16 +105,16 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
             value={prompt}
             onChange={(e) => onPromptChange(e.target.value)}
             placeholder={`Viết prompt của bạn cho chủ đề "${topic.name}" ở đây...`}
-            className="w-full h-40 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
+            className="w-full h-40 bg-gray-800 text-white placeholder-gray-500 border border-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
             aria-label="Trình soạn thảo prompt"
           />
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
             onClick={onOptimize}
             disabled={isLoading || !prompt}
-            className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingAction === 'optimize' ? <Spinner /> : <WandIcon className="h-5 w-5" />}
             Tối ưu
@@ -121,7 +122,7 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
           <button
             onClick={onReview}
             disabled={isLoading || !prompt}
-            className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingAction === 'review' ? <Spinner /> : <CheckBadgeIcon className="h-5 w-5" />}
             Nhận xét
@@ -129,7 +130,7 @@ const PromptEditor: React.FC<PromptEditorProps> = ({
           <button
             onClick={onSuggestPrompts}
             disabled={isLoading}
-            className="flex-1 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loadingAction === 'suggest' ? <Spinner /> : <LightBulbIcon className="h-5 w-5" />}
             Gợi ý

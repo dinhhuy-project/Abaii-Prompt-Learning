@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import type { Topic, QuizState, BattleState, BattlePlayer, TwentyQuestionsState, TwentyQuestionsHistoryItem } from './types.ts';
 import * as geminiService from './services/geminiService.ts';
@@ -6,18 +7,19 @@ import PromptEditor from './components/PromptEditor.tsx';
 import QuizView from './components/QuizView.tsx';
 import BattleView from './components/BattleView.tsx';
 import TwentyQuestionsView from './components/TwentyQuestionsView.tsx';
-import { SparklesIcon } from './components/icons.tsx';
+import { LogoIcon } from './components/icons.tsx';
 
 type ViewMode = 'editor' | 'quiz' | 'welcome' | 'battle' | 'twenty-questions';
 type EditorLoadingAction = 'optimize' | 'review' | 'suggest' | null;
 
 const WelcomeScreen = () => (
-    <div className="flex-1 flex flex-col justify-center items-center text-center p-6 bg-gray-800/50 rounded-lg shadow-inner">
-        <SparklesIcon className="h-16 w-16 text-cyan-400 mb-4" />
-        <h2 className="text-3xl font-bold text-white mb-2">Chào mừng đến với Abaii Prompt Learning</h2>
-        <p className="text-lg text-gray-400">Chọn một chủ đề, bắt đầu quiz, hoặc tham gia thi đấu!</p>
+    <div className="flex-1 flex flex-col justify-center items-center text-center p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl">
+        <LogoIcon className="h-20 w-20 text-cyan-400 mb-6" />
+        <h2 className="text-3xl font-bold text-white mb-2">Chào mừng đến với ABAII Prompt&Play</h2>
+        <p className="text-lg text-gray-400 max-w-md">Chọn một mục từ thanh bên để bắt đầu, hoặc tạo một chủ đề mới để khám phá sức mạnh của AI.</p>
     </div>
 );
+
 
 const App: React.FC = () => {
     const [topics, setTopics] = useState<Topic[]>([]);
@@ -247,12 +249,29 @@ const App: React.FC = () => {
         setTwentyQuestionsState(s => ({ ...s, status: 'evaluating' }));
         const answer = await geminiService.answerTwentyQuestions(twentyQuestionsState.secretWord, twentyQuestionsState.history, question);
         
-        const newHistoryItem: TwentyQuestionsHistoryItem = { type: 'question', text: question, answer: answer };
+        const questionHistoryItem: TwentyQuestionsHistoryItem = { type: 'question', text: question, answer: answer };
         
         const newQuestionsLeft = twentyQuestionsState.questionsLeft - 1;
+        const questionsAskedCount = 20 - newQuestionsLeft;
+
+        let updatedHistory = [...twentyQuestionsState.history, questionHistoryItem];
+        
+        const hintMilestones = [5, 10, 15, 19];
+        if (hintMilestones.includes(questionsAskedCount) && newQuestionsLeft > 0) {
+            const hintText = await geminiService.generateTwentyQuestionsHint(
+                twentyQuestionsState.secretWord, 
+                updatedHistory,
+                questionsAskedCount
+            );
+            if (hintText) {
+                const hintHistoryItem: TwentyQuestionsHistoryItem = { type: 'hint', text: hintText };
+                updatedHistory.push(hintHistoryItem);
+            }
+        }
+        
         const newState: Partial<TwentyQuestionsState> = {
             status: newQuestionsLeft > 0 ? 'playing' : 'finished',
-            history: [...twentyQuestionsState.history, newHistoryItem],
+            history: updatedHistory,
             questionsLeft: newQuestionsLeft,
         };
 
@@ -333,28 +352,20 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen bg-gray-900 text-gray-100 p-4">
-            <header className="mb-4">
-                <h1 className="text-3xl font-bold text-center text-cyan-400 flex items-center justify-center gap-2">
-                    <SparklesIcon className="h-8 w-8" />
-                    Abaii Prompt Learning
-                </h1>
-            </header>
-            <main className="flex-grow flex gap-4 overflow-hidden">
-                <TopicList
-                    topics={topics}
-                    selectedTopic={selectedTopic}
-                    onSelectTopic={handleSelectTopic}
-                    onAddTopic={handleAddTopic}
-                    onGenerateRandomTopic={handleGenerateRandomTopic}
-                    onStartQuiz={handleStartQuiz}
-                    onStartBattle={handleStartBattle}
-                    onStartTwentyQuestions={handleStartTwentyQuestions}
-                    isGenerating={isGeneratingTopic}
-                />
-                <div className="flex-1 flex flex-col relative">
-                    {renderMainContent()}
-                </div>
+        <div className="flex h-screen text-gray-200">
+            <TopicList
+                topics={topics}
+                selectedTopic={selectedTopic}
+                onSelectTopic={handleSelectTopic}
+                onAddTopic={handleAddTopic}
+                onGenerateRandomTopic={handleGenerateRandomTopic}
+                onStartQuiz={handleStartQuiz}
+                onStartBattle={handleStartBattle}
+                onStartTwentyQuestions={handleStartTwentyQuestions}
+                isGenerating={isGeneratingTopic}
+            />
+            <main className="flex-1 flex flex-col relative p-4 overflow-y-auto">
+                {renderMainContent()}
             </main>
         </div>
     );

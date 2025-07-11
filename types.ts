@@ -25,7 +25,7 @@ export interface BattleState {
 }
 
 export interface TwentyQuestionsHistoryItem {
-  type: 'question' | 'guess';
+  type: 'question' | 'guess' | 'hint';
   text: string;
   answer?: string; // For questions
 }

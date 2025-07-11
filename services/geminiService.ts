@@ -22,7 +22,7 @@ export const generateRandomTopic = async (): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: "Tạo một chủ đề ngẫu nhiên. Chủ đề nên mở ra không gian cho việc kể chuyện, tưởng tượng, hoặc các tình huống thực tế trong cuộc sống. Ví dụ: 'Bạn sẽ làm gì nếu có thể du hành thời gian?', 'Thiết kế một môn học mới cho trường của bạn', 'Viết một câu chuyện kinh dị chỉ trong ba câu', 'Em gái của bạn hôm nay muốn ăn một món tráng miệng'. Chỉ trả về tên chủ đề.",
+            contents: "Tạo một chủ đề ngẫu nhiên. Chủ đề này có thể là chủ đề học tập khác nhau (Toán, Văn, Lịch sử, v.v.), tình huống học tập thực tế (Ví dụ: Tạo danh sách kiểm tra bài tập, giải thích lý thuyết khoa học),... . Chỉ trả về tên chủ đề.",
             config: {
                 temperature: 1.0,
                 maxOutputTokens: 50,
@@ -40,7 +40,7 @@ export const generateBattleTopic = async (): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: "Tạo một chủ đề thi đấu dưới dạng một câu hỏi mô tả một tình huống hoặc một câu đố mẹo. Câu hỏi chỉ cần ngắn gọn, dễ hiểu để người chơi có thể có nhiều cách để viết một prompt để giải quyết vấn đề. Ví dụ: 'Có một người bị ngã xuống vực! Ai cứu người đó đi!' Hãy tạo ra những tình huống tương tự. Chỉ trả về đoạn văn mô tả tình huống.",
+            contents: "Tạo một chủ đề thi đấu dưới dạng một yêu cầu thực tế. Chỉ cần ngắn gọn, dễ hiểu để người chơi có thể có nhiều cách để viết một prompt để giải quyết vấn đề. Ví dụ: 'Nay bạn cần phải viết email để thông báo cho thầy cô về danh sách lớp học' Hãy tạo ra những tình huống tương tự. Chỉ trả về đoạn văn mô tả tình huống.",
             config: {
                 temperature: 1.0,
                 maxOutputTokens: 150,
@@ -56,13 +56,20 @@ export const generateBattleTopic = async (): Promise<string> => {
 
 
 export const optimizePrompt = async (topic: string, userPrompt: string): Promise<string> => {
-    const fullPrompt = `Chủ đề: "${topic}"\nCâu của bạn học sinh: "${userPrompt}"\n\nHãy giúp bạn ấy viết lại câu này thật hay và sáng tạo nhé! Chỉ trả về câu đã được viết lại.`;
+    const fullPrompt = `Chủ đề: "${topic}"\nCâu của người dùng: "${userPrompt}"\n\nHãy giúp người dùng viết lại prompt này theo cấu trúc đầy đủ sau:
+    - Mô tả nhiệm vụ: Nêu rõ ràng những gì bạn muốn AI làm.
+    - Ngữ cảnh: Cung cấp thông tin nền hoặc dữ liệu có liên quan.
+    - Vai trò: Chỉ định vai trò hoặc tính cách mà bạn muốn AI đảm nhận.
+    - Yêu cầu: Liệt kê các yêu cầu về phong cách, định dạng hoặc nội dung.
+    - Giới hạn: Đặt ra giới hạn về những gì cần loại trừ hoặc tránh.
+    - Lập luận: Yêu cầu AI giải thích lý luận hoặc cách tiếp cận của nó.
+    Chỉ trả về câu đã được viết lại.`;
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: fullPrompt,
-             config: {
-                systemInstruction: "Bạn là một người bạn AI thân thiện, giúp các bạn học sinh cải thiện câu văn của mình. Hãy viết lại câu của bạn ấy một cách hay hơn, giàu trí tưởng tượng hơn nhưng vẫn giữ ý chính. Hãy dùng từ ngữ đơn giản, dễ hiểu.",
+            config: {
+                systemInstruction: "Bạn là một AI giảng viên chuyên nghiệp, giúp người dùng cải thiện câu văn prompt của mình. Hãy viết lại câu prompt của người dùng một cách hay hơn, đầy đủ nội dung hơn nhưng vẫn giữ ý chính. Hãy dùng từ ngữ đơn giản, dễ hiểu.",
             }
         });
         return response.text;
@@ -73,13 +80,13 @@ export const optimizePrompt = async (topic: string, userPrompt: string): Promise
 };
 
 export const reviewPrompt = async (topic: string, userPrompt: string): Promise<string> => {
-    const fullPrompt = `Chủ đề: "${topic}"\nCâu của bạn học sinh: "${userPrompt}"\n\nHãy nhận xét câu này một cách thật thân thiện. Bắt đầu bằng việc khen một điểm hay. Sau đó, gợi ý một hoặc hai điều nhỏ để câu văn trở nên thú vị hơn nữa. Dùng ngôn ngữ tích cực và dễ hiểu nhé.`;
+    const fullPrompt = `Chủ đề: "${topic}"\nCâu của người dùng: "${userPrompt}"\n\nHãy nhận xét câu prompt này một cách thật thân thiện. Bắt đầu bằng việc khen một điểm hay. Sau đó, gợi ý một hoặc hai điều nhỏ để câu văn trở nên đầy đủ, chính xác và hay hơn nữa. Dùng ngôn ngữ tích cực và dễ hiểu nhé.`;
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: fullPrompt,
             config: {
-                systemInstruction: "Bạn là một người bạn AI tốt bụng, luôn động viên và khuyến khích các bạn học sinh. Nhiệm vụ của bạn là đưa ra những lời khen và góp ý nhẹ nhàng để giúp câu văn của các bạn ấy tốt hơn.",
+                systemInstruction: "Bạn là một AI giảng viên tốt bụng và nhiệt tính, luôn động viên và khuyến khích người dùng Nhiệm vụ của bạn là đưa ra những lời khen và góp ý nhẹ nhàng để giúp câu văn của người dùng tốt hơn.",
             }
         });
         return response.text;
@@ -90,7 +97,14 @@ export const reviewPrompt = async (topic: string, userPrompt: string): Promise<s
 };
 
 export const suggestPrompts = async (topic: string): Promise<string[]> => {
-    const fullPrompt = `Với chủ đề "${topic}", hãy tạo một danh sách gồm 3 prompt tối ưu và đa dạng. Các prompt này phải sáng tạo, rõ ràng, và có cấu trúc tốt để AI có thể hiểu và trả lời một cách hiệu quả nhất. Các prompt nên khác nhau về phong cách và mục tiêu.`;
+    const fullPrompt = `Với chủ đề "${topic}", hãy tạo một danh sách gồm 3 prompt tối ưu và đa dạng. Các prompt này phải sáng tạo, rõ ràng, và có cấu trúc như sau:
+    - Mô tả nhiệm vụ: Nêu rõ ràng những gì bạn muốn AI làm.
+    - Ngữ cảnh: Cung cấp thông tin nền hoặc dữ liệu có liên quan.
+    - Vai trò: Chỉ định vai trò hoặc tính cách mà bạn muốn AI đảm nhận.
+    - Yêu cầu: Liệt kê các yêu cầu về phong cách, định dạng hoặc nội dung.
+    - Giới hạn: Đặt ra giới hạn về những gì cần loại trừ hoặc tránh.
+    - Lập luận: Yêu cầu AI giải thích lý luận hoặc cách tiếp cận của nó.
+    Các prompt nên khác nhau về phong cách và mục tiêu.`;
 
     try {
         const response = await ai.models.generateContent({
@@ -129,7 +143,7 @@ export const generateQuizQuestion = async (): Promise<string> => {
             contents: "Tạo một câu đố vừa giải trí vừa thử thách trí tuệ cho học sinh từ lớp 6 đến lớp 12. Câu đố có thể là một câu hỏi mẹo, một câu đố logic, hoặc một câu hỏi kiến thức phổ thông thú vị. Chỉ trả về câu đố.",
             config: {
                 temperature: 0.9,
-                 thinkingConfig: { thinkingBudget: 0 }
+                thinkingConfig: { thinkingBudget: 0 }
             }
         });
         return response.text;
@@ -170,7 +184,7 @@ export const evaluateQuizAnswer = async (question: string, answer: string): Prom
         console.error("Error evaluating quiz answer:", error);
         return {
             feedback: "Lỗi khi đánh giá câu trả lời. Vui lòng thử lại.",
-            imagePrompt: "" 
+            imagePrompt: ""
         };
     }
 };
@@ -181,14 +195,14 @@ export const generateQuizImage = async (prompt: string): Promise<string> => {
             model: 'imagen-3.0-generate-002',
             prompt: `${prompt}, digital art, vibrant colors, simple, for kids, cheerful`,
             config: {
-              numberOfImages: 1,
-              outputMimeType: 'image/jpeg',
-              aspectRatio: '1:1',
+                numberOfImages: 1,
+                outputMimeType: 'image/jpeg',
+                aspectRatio: '1:1',
             },
         });
 
         if (response.generatedImages && response.generatedImages.length > 0) {
-             return response.generatedImages[0].image.imageBytes;
+            return response.generatedImages[0].image.imageBytes;
         }
         throw new Error("No image was generated.");
 
@@ -255,7 +269,7 @@ export const startTwentyQuestionsGame = async (): Promise<string> => {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: "Tôi muốn chơi trò 20 câu hỏi. Hãy nghĩ về MỘT đồ vật, con vật, hoặc nhân vật nổi tiếng bất kỳ. Chỉ trả về TÊN của nó, không có thêm bất kỳ lời giải thích nào. Ví dụ: 'Quả chuối', 'Con mèo', 'Albert Einstein'.",
-             config: {
+            config: {
                 temperature: 1.0,
                 thinkingConfig: { thinkingBudget: 0 }
             }
@@ -305,6 +319,41 @@ export const answerTwentyQuestions = async (secretWord: string, history: TwentyQ
     }
 };
 
+export const generateTwentyQuestionsHint = async (secretWord: string, history: TwentyQuestionsHistoryItem[], questionsAskedCount: number): Promise<string> => {
+    const historyText = history.filter(h => h.type === 'question').map(h => `Hỏi: ${h.text}\nĐáp: ${h.answer}`).join('\n\n');
+
+    let hintInstruction = '';
+    if (questionsAskedCount === 5) {
+        hintInstruction = "Gợi ý mức độ 1 (rất mơ hồ): Cho biết danh mục rất chung chung của từ bí mật (ví dụ: 'Nó là một đồ vật', 'Nó là một sinh vật sống', 'Nó là một khái niệm').";
+    } else if (questionsAskedCount === 10) {
+        hintInstruction = "Gợi ý mức độ 2 (cụ thể hơn): Cho biết một danh mục phụ hoặc một thuộc tính cơ bản (ví dụ: 'Nó là một loại trái cây', 'Nó được tìm thấy trong nhà bếp', 'Nó lớn hơn một chiếc bánh mì').";
+    } else if (questionsAskedCount === 15) {
+        hintInstruction = "Gợi ý mức độ 3 (khá rõ ràng): Mô tả một đặc điểm, công dụng hoặc màu sắc đặc trưng (ví dụ: 'Nó có màu vàng', 'Nó được dùng để viết', 'Nó có thể bay').";
+    } else if (questionsAskedCount === 19) {
+        hintInstruction = "Gợi ý mức độ 4 (rất rõ ràng): Đưa ra một gợi ý rất mạnh, gần như tiết lộ câu trả lời (ví dụ: 'Loài khỉ rất thích nó', 'Nó là bạn thân của chuột Jerry').";
+    } else {
+        return ""; // Should not be called for other counts
+    }
+
+    const fullPrompt = `Từ bí mật là: "${secretWord}".\n\nLịch sử hỏi đáp:\n${historyText}\n\nNhiệm vụ: Dựa vào từ bí mật và lịch sử hỏi đáp, hãy tạo một câu gợi ý cho người chơi. \n\n${hintInstruction}\n\nHãy chỉ trả về NỘI DUNG của câu gợi ý, không có tiền tố như 'Gợi ý:'.`;
+    
+    try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: fullPrompt,
+            config: {
+                systemInstruction: "Bạn là người quản trò thông thái trong trò 20 câu hỏi. Nhiệm vụ của bạn là đưa ra một gợi ý hữu ích nhưng không quá lộ liễu, dựa trên mức độ đã được yêu cầu.",
+                temperature: 0.7,
+                thinkingConfig: { thinkingBudget: 0 }
+            }
+        });
+        return `Gợi ý: ${response.text.trim()}`;
+    } catch (error) {
+        console.error("Error generating 20 questions hint:", error);
+        return "Gợi ý: Không thể tạo gợi ý vào lúc này.";
+    }
+};
+
 
 export const evaluateTwentyQuestionsGuess = async (secretWord: string, guess: string): Promise<boolean> => {
     const fullPrompt = `Từ bí mật là: "${secretWord}".\n\nNgười chơi đoán rằng đó là: "${guess}".\n\nĐoán này có đúng không?`;
@@ -313,9 +362,9 @@ export const evaluateTwentyQuestionsGuess = async (secretWord: string, guess: st
             model: 'gemini-2.5-flash',
             contents: fullPrompt,
             config: {
-                 systemInstruction: "Bạn là giám khảo trong trò chơi 20 câu hỏi. Từ bí mật đã được xác định. Người chơi đã đưa ra một phỏng đoán cuối cùng. Hãy xác định xem phỏng đoán đó có chính xác hay không. Chỉ quan tâm đến sự tương đồng về mặt ý nghĩa, không cần phải chính xác từng từ.",
-                 responseMimeType: "application/json",
-                 responseSchema: {
+                systemInstruction: "Bạn là giám khảo trong trò chơi 20 câu hỏi. Từ bí mật đã được xác định. Người chơi đã đưa ra một phỏng đoán cuối cùng. Hãy xác định xem phỏng đoán đó có chính xác hay không. Chỉ quan tâm đến sự tương đồng về mặt ý nghĩa, không cần phải chính xác từng từ.",
+                responseMimeType: "application/json",
+                responseSchema: {
                     type: Type.OBJECT,
                     properties: {
                         isCorrect: {
@@ -324,7 +373,7 @@ export const evaluateTwentyQuestionsGuess = async (secretWord: string, guess: st
                         }
                     },
                     required: ["isCorrect"]
-                 }
+                }
             }
         });
         const jsonResponse = JSON.parse(response.text);

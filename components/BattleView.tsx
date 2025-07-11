@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import type { BattleState } from '../types.ts';
 import Spinner from './Spinner.tsx';
@@ -17,15 +18,15 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
   
   if (!battleState) {
     return (
-      <div className="flex-1 flex flex-col justify-center items-center p-6 bg-gray-800/50 rounded-lg shadow-inner">
+      <div className="flex-1 flex flex-col justify-center items-center p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl">
         <p>Lỗi: Trạng thái thi đấu không hợp lệ.</p>
       </div>
     );
   }
 
   const renderConfigScreen = () => (
-    <div className="flex-1 flex flex-col justify-center items-center p-6 bg-gray-800/50 rounded-lg shadow-inner text-center">
-      <TrophyIcon className="h-16 w-16 text-red-400 mb-4" />
+    <div className="flex-1 flex flex-col justify-center items-center p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl text-center">
+      <TrophyIcon className="h-16 w-16 text-cyan-400 mb-4" />
       <h2 className="text-3xl font-bold mb-4">Thi Đấu Prompt</h2>
       <p className="text-gray-300 mb-6">Chọn số lượng người tham gia để bắt đầu.</p>
       <div className="flex items-center gap-4 mb-6">
@@ -37,13 +38,13 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
           onChange={(e) => setPlayerCount(Math.max(2, parseInt(e.target.value, 10)))}
           min="2"
           max="10"
-          className="w-24 bg-gray-700 text-white text-center text-lg font-bold border border-gray-600 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+          className="w-24 bg-gray-800 text-white text-center text-lg font-bold border border-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-cyan-500"
         />
       </div>
       <button
         onClick={() => onConfigure(playerCount)}
         disabled={isLoading}
-        className="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-8 rounded-lg text-lg transition disabled:opacity-50"
+        className="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-lg text-lg transition disabled:opacity-50"
       >
         {isLoading ? <Spinner /> : 'Bắt đầu!'}
       </button>
@@ -53,13 +54,13 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
   const renderWritingScreen = () => {
     const allPromptsFilled = battleState.players.every(p => p.prompt.trim() !== '');
     return (
-        <div className="flex-1 flex flex-col p-6 overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-2">Chủ đề: <span className="text-red-400">{battleState.topic}</span></h2>
+        <div className="flex-1 flex flex-col p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-2">Chủ đề: <span className="text-cyan-400">{battleState.topic}</span></h2>
             <p className="text-gray-400 mb-6">Mỗi người chơi hãy viết một prompt thật sáng tạo dựa trên chủ đề này.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {battleState.players.map(player => (
-                    <div key={player.id} className="bg-gray-800/70 p-4 rounded-lg">
+                    <div key={player.id} className="bg-gray-900 border border-gray-800 p-4 rounded-lg">
                         <label htmlFor={`player-prompt-${player.id}`} className="block text-lg font-semibold text-white mb-2">
                             Người chơi {player.id}
                         </label>
@@ -68,7 +69,7 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
                             value={player.prompt}
                             onChange={(e) => onPromptChange(player.id, e.target.value)}
                             placeholder="Viết prompt của bạn ở đây..."
-                            className="w-full h-32 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                            className="w-full h-32 bg-gray-800 text-white placeholder-gray-500 border border-gray-700 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition"
                         />
                     </div>
                 ))}
@@ -77,7 +78,7 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
             <button
                 onClick={onEvaluate}
                 disabled={isLoading || !allPromptsFilled}
-                className="w-full max-w-md mx-auto flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full max-w-md mx-auto flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg text-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {isLoading ? <Spinner /> : 'Chấm điểm & Xếp hạng'}
             </button>
@@ -94,29 +95,29 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
       }
 
       return (
-        <div className="flex-1 flex flex-col p-6 overflow-y-auto">
-            <h2 className="text-3xl font-bold mb-2 text-center text-red-400">Kết quả Thi đấu</h2>
+        <div className="flex-1 flex flex-col p-6 bg-gray-900/80 border border-gray-800 rounded-lg shadow-2xl overflow-y-auto">
+            <h2 className="text-3xl font-bold mb-2 text-center text-cyan-400">Kết quả Thi đấu</h2>
             <p className="text-gray-400 mb-6 text-center">Chủ đề: <span className="font-semibold">{battleState.topic}</span></p>
 
             <div className="space-y-4">
                 {battleState.players.map((player, index) => (
-                    <div key={player.id} className="bg-gray-800 rounded-lg p-4 border-l-4 border-red-500/50">
+                    <div key={player.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 border-l-4 border-cyan-500/50">
                         <div className="flex justify-between items-start mb-2">
                             <h3 className="text-2xl font-bold text-white">
                                 <span className="mr-3">{getMedal(index)}</span>
                                 Người chơi {player.id}
                             </h3>
-                            <div className="text-2xl font-bold text-red-400">{player.score} <span className="text-sm text-gray-400">điểm</span></div>
+                            <div className="text-2xl font-bold text-cyan-400">{player.score} <span className="text-sm text-gray-400">điểm</span></div>
                         </div>
-                        <p className="text-gray-300 italic bg-gray-900/50 p-3 rounded-md mb-3">"{player.prompt}"</p>
-                        <p className="text-white"><strong className="text-red-300">Nhận xét:</strong> {player.feedback}</p>
+                        <p className="text-gray-300 italic bg-black/20 p-3 rounded-md mb-3">"{player.prompt}"</p>
+                        <p className="text-white"><strong className="text-cyan-300">Nhận xét:</strong> {player.feedback}</p>
                     </div>
                 ))}
             </div>
 
              <button
                 onClick={onReset}
-                className="mt-8 w-full max-w-md mx-auto flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-lg text-lg transition"
+                className="mt-8 w-full max-w-md mx-auto flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg text-lg transition"
             >
                 Chơi lại
             </button>
@@ -127,7 +128,7 @@ const BattleView: React.FC<BattleViewProps> = ({ battleState, isLoading, onConfi
   const renderEvaluatingScreen = () => (
     <div className="flex-1 flex flex-col justify-center items-center p-6 text-center">
         <Spinner />
-        <h2 className="text-2xl font-bold mt-4 text-red-400">Đang chấm điểm...</h2>
+        <h2 className="text-2xl font-bold mt-4 text-cyan-400">Đang chấm điểm...</h2>
         <p className="text-gray-300">AI đang phân tích và cho điểm từng câu prompt. Vui lòng chờ trong giây lát.</p>
     </div>
   );
