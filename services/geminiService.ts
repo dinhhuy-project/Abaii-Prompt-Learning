@@ -80,7 +80,14 @@ export const optimizePrompt = async (topic: string, userPrompt: string): Promise
 };
 
 export const reviewPrompt = async (topic: string, userPrompt: string): Promise<string> => {
-    const fullPrompt = `Chủ đề: "${topic}"\nCâu của người dùng: "${userPrompt}"\n\nHãy nhận xét câu prompt này một cách thật thân thiện. Bắt đầu bằng việc khen một điểm hay. Sau đó, gợi ý một hoặc hai điều nhỏ để câu văn trở nên đầy đủ, chính xác và hay hơn nữa. Dùng ngôn ngữ tích cực và dễ hiểu nhé.`;
+    const fullPrompt = `Chủ đề: "${topic}"\nCâu của người dùng: "${userPrompt}"\n\nHãy nhận xét câu prompt này một cách thật thân thiện. Bắt đầu bằng việc khen một điểm hay. Sau đó, hãy khuyên nhủ người dùng dựa trên cấu trúc prompt sau để phát huy tối đa hiệu quả khi giao tiếp với AI:
+    - Mô tả nhiệm vụ: Nêu rõ ràng những gì bạn muốn AI làm.
+    - Ngữ cảnh: Cung cấp thông tin nền hoặc dữ liệu có liên quan.
+    - Vai trò: Chỉ định vai trò hoặc tính cách mà bạn muốn AI đảm nhận.
+    - Yêu cầu: Liệt kê các yêu cầu về phong cách, định dạng hoặc nội dung.
+    - Giới hạn: Đặt ra giới hạn về những gì cần loại trừ hoặc tránh.
+    - Lập luận: Yêu cầu AI giải thích lý luận hoặc cách tiếp cận của nó.
+    Dùng ngôn ngữ tích cực và dễ hiểu nhé.`;
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -218,7 +225,14 @@ export const evaluateBattlePrompts = async (
     players: { id: number; prompt: string }[]
 ): Promise<BattleEvaluationResult[]> => {
     const promptsToEvaluate = players.map(p => `- Người chơi ${p.id}: "${p.prompt}"`).join('\n');
-    const fullPrompt = `Chủ đề: "${topic}"\n\nĐây là một chủ đề giải đố. Hãy đóng vai một giám khảo công tâm, chấm điểm từng prompt của người chơi dựa trên khả năng giải quyết vấn đề, sự thông minh, sáng tạo và rõ ràng của prompt. Cho điểm theo thang 1-100 và đưa ra nhận xét ngắn gọn, mang tính xây dựng. \n\nCác prompt cần chấm điểm:\n${promptsToEvaluate}\n\nHãy trả về kết quả dưới dạng JSON theo schema đã cung cấp.`;
+    const fullPrompt = `Chủ đề: "${topic}"\n\nĐây là một cuộc thi đánh giá độ hiểu quả của các câu prompt. Hãy đóng vai một giám khảo công tâm, chấm điểm từng prompt của người chơi dựa trên tiêu chí của cấu trúc sau: 
+    - Mô tả nhiệm vụ: Nêu rõ ràng những gì bạn muốn AI làm.
+    - Ngữ cảnh: Cung cấp thông tin nền hoặc dữ liệu có liên quan.
+    - Vai trò: Chỉ định vai trò hoặc tính cách mà bạn muốn AI đảm nhận.
+    - Yêu cầu: Liệt kê các yêu cầu về phong cách, định dạng hoặc nội dung.
+    - Giới hạn: Đặt ra giới hạn về những gì cần loại trừ hoặc tránh.
+    - Lập luận: Yêu cầu AI giải thích lý luận hoặc cách tiếp cận của nó.
+    Cho điểm theo thang 1-100 và đưa ra nhận xét ngắn gọn, mang tính xây dựng. \n\nCác prompt cần chấm điểm:\n${promptsToEvaluate}\n\nHãy trả về kết quả dưới dạng JSON theo schema đã cung cấp.`;
 
     try {
         const response = await ai.models.generateContent({
