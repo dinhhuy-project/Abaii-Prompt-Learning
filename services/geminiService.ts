@@ -40,7 +40,7 @@ export const generateBattleTopic = async (): Promise<string> => {
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: "Tạo một chủ đề thi đấu dưới dạng một yêu cầu thực tế. Chỉ cần ngắn gọn, dễ hiểu để người chơi có thể có nhiều cách để viết một prompt để giải quyết vấn đề. Ví dụ: 'Nay bạn cần phải viết email để thông báo cho thầy cô về danh sách lớp học' Hãy tạo ra những tình huống tương tự. Chỉ trả về đoạn văn mô tả tình huống.",
+            contents: "Tạo một chủ đề thi đấu dưới dạng một yêu cầu thực tế. Chỉ cần ngắn gọn, dễ hiểu để người chơi có thể có nhiều cách để viết một prompt để giải quyết vấn đề. Ví dụ: 'Nay bạn cần phải viết email để thông báo cho thầy cô về danh sách lớp học' Hãy tạo ra một tình huống tương tự. Chỉ trả về đoạn văn mô tả tình huống.",
             config: {
                 temperature: 1.0,
                 maxOutputTokens: 150,
